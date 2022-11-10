@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+// StatefulWidget에서는 상태를 변경해주고 싶을 때 setState를 써야 함
 
 void main() {
   runApp(const MyApp());
@@ -65,12 +69,13 @@ class _HomePageState extends State<HomePage> {
             ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () {
+        onPressed: () async {
           // + 버튼 클릭시 버킷 생성 페이지로 이동
-          Navigator.push(
+          String? job = await Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => CreatePage()),
           );
+          print(job);
         },
       ),
     );
@@ -78,8 +83,19 @@ class _HomePageState extends State<HomePage> {
 }
 
 /// 버킷 생성 페이지
-class CreatePage extends StatelessWidget {
+class CreatePage extends StatefulWidget {
   const CreatePage({Key? key}) : super(key: key);
+
+  @override
+  State<CreatePage> createState() => _CreatePageState();
+}
+
+class _CreatePageState extends State<CreatePage> {
+  // TextField의 값을 가져올 때 사용합니다.
+  TextEditingController textController = TextEditingController();
+
+  // 경고 메세지
+  String? error;
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +116,11 @@ class CreatePage extends StatelessWidget {
           children: [
             // 텍스트 입력창
             TextField(
+              controller: textController,
               autofocus: true,
               decoration: InputDecoration(
                 hintText: "하고 싶은 일을 입력하세요",
+                errorText: error,
               ),
             ),
             SizedBox(height: 32),
@@ -119,6 +137,18 @@ class CreatePage extends StatelessWidget {
                 ),
                 onPressed: () {
                   // 추가하기 버튼 클릭시
+                  String job = textController.text;
+
+                  if (job.isEmpty) {
+                    setState(() {
+                      error = "내용을 입력해주세요";
+                    });
+                  } else {
+                    setState(() {
+                      error = null;
+                    });
+                    Navigator.pop(context, job);
+                  }
                 },
               ),
             ),
