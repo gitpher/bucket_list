@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// 배운점
 // StatefulWidget에서는 상태를 변경해주고 싶을 때 setState를 써야 함
+// async와 await
 
 void main() {
   runApp(const MyApp());
